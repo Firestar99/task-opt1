@@ -8,12 +8,13 @@ This is a programming task given to candidates interviewing at [Numfum GmbH](//w
 
 The task is to optimise the table generation in `create_etc1_to_dxt1_6_conversion_table()` (in [main.cpp](main.cpp)), showing timings before and after. Example timings from the unoptimised code for comparison:
 
-| Machine             | OS             | CPU           | Compiler | Time  |
-|---------------------|----------------|---------------|----------|-------|
-| Mac Pro (Late 2013) | Windows 10     | Intel Xeon E5 | MSVC 19  | 408ms |
-| Mac Pro (Late 2013) | macOS Big Sur  | Intel Xeon E5 | Clang 13 | 326ms |
-| Talos II            | Debian Buster  | IBM Power9    | GCC 10   | 289ms |
-| MacBook Pro (2021)  | macOS Monterey | Apple M1 Max  | Clang 13 | 158ms |
+| Machine             | OS             | CPU            | Compiler | Time  |
+|---------------------|----------------|----------------|----------|-------|
+| Mac Pro (Late 2013) | Windows 10     | Intel Xeon E5  | MSVC 19  | 408ms |
+| Mac Pro (Late 2013) | macOS Big Sur  | Intel Xeon E5  | Clang 13 | 326ms |
+| Talos II            | Debian Buster  | IBM Power9     | GCC 10   | 289ms |
+| MacBook Pro (2021)  | macOS Monterey | Apple M1 Max   | Clang 13 | 158ms |
+| Flow X16 before     | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 184ms |
 
 These numbers should give you an idea of what to expect on different architectures (and also compilers and OSes).
 
