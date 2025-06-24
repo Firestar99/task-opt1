@@ -73,27 +73,23 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 			for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
 				const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
 				const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
-
 				for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
+
 					uint32_t best_lo = 0;
 					uint32_t best_hi = 0;
 					uint32_t best_err = UINT32_MAX;
-
 					for (uint32_t hi = 0; hi <= 63; hi++) {
 						for (uint32_t lo = 0; lo <= 63; lo++) {
-							uint32_t colors[4];
 
+							uint32_t colors[4];
 							colors[0] = (lo << 2) | (lo >> 4);
 							colors[3] = (hi << 2) | (hi >> 4);
-
 							colors[1] = (colors[0] * 2 + colors[3]) / 3;
 							colors[2] = (colors[3] * 2 + colors[0]) / 3;
 
 							uint32_t total_err = 0;
-
 							for (uint32_t s = low_selector; s <= high_selector; s++) {
 								int err = block_colors[s].g - colors[g_etc1_to_dxt1_selector_mappings[m][s]];
-
 								total_err += err * err;
 							}
 
@@ -106,9 +102,7 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 					}
 
 					assert(best_err <= 0xFFFF);
-
 					result[n] = (etc1_to_dxt1_56_solution){ (uint8_t)best_lo, (uint8_t)best_hi, (uint16_t)best_err };
-
 					n++;
 				} // m
 			} // sr
