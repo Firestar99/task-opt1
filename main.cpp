@@ -88,14 +88,20 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 					colors[1] = (colors[0] * 2 + colors[3]) / 3;
 					colors[2] = (colors[3] * 2 + colors[0]) / 3;
 
-					for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
-						const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
-						const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
-						for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
+					for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
+						int errors[4];
+						for (int s = 0; s < 4; ++s)
+						{
+							errors[s] = block_colors[s].g - colors[g_etc1_to_dxt1_selector_mappings[m][s]];
+						}
+
+						for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
+							const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
+							const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
 
 							uint32_t total_err = 0;
 							for (uint32_t s = low_selector; s <= high_selector; s++) {
-								int err = block_colors[s].g - colors[g_etc1_to_dxt1_selector_mappings[m][s]];
+								int err = errors[s];
 								total_err += err * err;
 							}
 
@@ -105,8 +111,8 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 							}
 						}
 					}
-				} // m
-			} // sr
+				} // sr
+			} // m
 		} // g
 	} // inten
 }
@@ -122,7 +128,7 @@ int main(int /*argc*/, char* /*argv*/[]) {
 	if (!verifyTable(result, known)) {
 		printf("Generated results don't match known values\n");
 	}
-    
+
     // Perform multiple runs and take the best time
     unsigned best = UINT32_MAX;
     for (int n = 10; n > 0; n--) {
@@ -133,7 +139,7 @@ int main(int /*argc*/, char* /*argv*/[]) {
     		best = time;
     	}
     }
-    
+
     printf("Best run took %dms\n", best);
     return 0;
 }
