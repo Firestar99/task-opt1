@@ -79,19 +79,19 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 			color32 block_colors[4];
 			decoder_etc_block::get_diff_subblock_colors(block_colors, decoder_etc_block::pack_color5(color32(g, g, g, 255), false), inten);
 
-			for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
-				const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
-				const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
-				for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
+			for (uint32_t hi = 0; hi <= 63; hi++) {
+				for (uint32_t lo = 0; lo <= 63; lo++) {
 
-					for (uint32_t hi = 0; hi <= 63; hi++) {
-						for (uint32_t lo = 0; lo <= 63; lo++) {
+					uint32_t colors[4];
+					colors[0] = (lo << 2) | (lo >> 4);
+					colors[3] = (hi << 2) | (hi >> 4);
+					colors[1] = (colors[0] * 2 + colors[3]) / 3;
+					colors[2] = (colors[3] * 2 + colors[0]) / 3;
 
-							uint32_t colors[4];
-							colors[0] = (lo << 2) | (lo >> 4);
-							colors[3] = (hi << 2) | (hi >> 4);
-							colors[1] = (colors[0] * 2 + colors[3]) / 3;
-							colors[2] = (colors[3] * 2 + colors[0]) / 3;
+					for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
+						const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
+						const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
+						for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
 
 							uint32_t total_err = 0;
 							for (uint32_t s = low_selector; s <= high_selector; s++) {
