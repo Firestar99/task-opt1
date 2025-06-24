@@ -63,8 +63,6 @@ static etc1_to_dxt1_56_solution result[32 * 8 * NUM_ETC1_TO_DXT1_SELECTOR_MAPPIN
  * Function to optimise.
  */
 static void create_etc1_to_dxt1_6_conversion_table() {
-	uint32_t n = 0;
-
 	for (int inten = 0; inten < 8; inten++) {
 		for (uint32_t g = 0; g < 32; g++) {
 			color32 block_colors[4];
@@ -102,8 +100,8 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 					}
 
 					assert(best_err <= 0xFFFF);
-					result[n] = (etc1_to_dxt1_56_solution){ (uint8_t)best_lo, (uint8_t)best_hi, (uint16_t)best_err };
-					n++;
+					size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
+					result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)best_lo, (uint8_t)best_hi, (uint16_t)best_err };
 				} // m
 			} // sr
 		} // g
