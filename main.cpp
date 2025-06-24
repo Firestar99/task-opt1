@@ -65,6 +65,17 @@ static etc1_to_dxt1_56_solution result[32 * 8 * NUM_ETC1_TO_DXT1_SELECTOR_MAPPIN
 static void create_etc1_to_dxt1_6_conversion_table() {
 	for (int inten = 0; inten < 8; inten++) {
 		for (uint32_t g = 0; g < 32; g++) {
+			for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
+				for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
+					size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
+					result[index] = (etc1_to_dxt1_56_solution){ 0, 0, UINT16_MAX };
+				} // m
+			} // sr
+		} // g
+	} // inten
+
+	for (int inten = 0; inten < 8; inten++) {
+		for (uint32_t g = 0; g < 32; g++) {
 			color32 block_colors[4];
 			decoder_etc_block::get_diff_subblock_colors(block_colors, decoder_etc_block::pack_color5(color32(g, g, g, 255), false), inten);
 
@@ -73,9 +84,6 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 				const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
 				for (uint32_t m = 0; m < NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS; m++) {
 
-					uint32_t best_lo = 0;
-					uint32_t best_hi = 0;
-					uint32_t best_err = UINT32_MAX;
 					for (uint32_t hi = 0; hi <= 63; hi++) {
 						for (uint32_t lo = 0; lo <= 63; lo++) {
 
@@ -91,17 +99,12 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 								total_err += err * err;
 							}
 
-							if (total_err < best_err) {
-								best_err = total_err;
-								best_lo = lo;
-								best_hi = hi;
+							size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
+							if (total_err < result[index].m_err) {
+								result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)lo, (uint8_t)hi, (uint16_t)total_err };
 							}
 						}
 					}
-
-					assert(best_err <= 0xFFFF);
-					size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
-					result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)best_lo, (uint8_t)best_hi, (uint16_t)best_err };
 				} // m
 			} // sr
 		} // g
