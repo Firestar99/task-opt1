@@ -8,18 +8,18 @@ This is a programming task given to candidates interviewing at [Numfum GmbH](//w
 
 The task is to optimise the table generation in `create_etc1_to_dxt1_6_conversion_table()` (in [main.cpp](main.cpp)), showing timings before and after. Example timings from the unoptimised code for comparison:
 
-| Machine                                                    | OS             | CPU            | Compiler | Time  |
-|------------------------------------------------------------|----------------|----------------|----------|-------|
-| Mac Pro (Late 2013)                                        | Windows 10     | Intel Xeon E5  | MSVC 19  | 408ms |
-| Mac Pro (Late 2013)                                        | macOS Big Sur  | Intel Xeon E5  | Clang 13 | 326ms |
-| Talos II                                                   | Debian Buster  | IBM Power9     | GCC 10   | 289ms |
-| MacBook Pro (2021)                                         | macOS Monterey | Apple M1 Max   | Clang 13 | 158ms |
-| Flow X16 baseline bc3df10185e0641c8aa7b9f757c6511ff195b187 | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 184ms |
-| explicit indexing dd3dab22034bec0e98700b6c850c28dc6540165b | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 182ms |
-| scatter writes c4b3801dedca23c434fabeac67627f0bd8ac148c    | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 162ms |
-| rearrange loops e0da2b0c5a21c5c2991fa31e901ba3d691f0f671   | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 97ms  |
-| cache errors f84a3fd584fa53e105ad8738d77f3f1865e2141e      | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 37ms  |
-| cache squaring 81e4723acc9d196d182a917dd0efa825559d2bed    | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 33ms  |
+| Machine                                                                                                      | OS             | CPU            | Compiler | Time  |
+|--------------------------------------------------------------------------------------------------------------|----------------|----------------|----------|-------|
+| Mac Pro (Late 2013)                                                                                          | Windows 10     | Intel Xeon E5  | MSVC 19  | 408ms |
+| Mac Pro (Late 2013)                                                                                          | macOS Big Sur  | Intel Xeon E5  | Clang 13 | 326ms |
+| Talos II                                                                                                     | Debian Buster  | IBM Power9     | GCC 10   | 289ms |
+| MacBook Pro (2021)                                                                                           | macOS Monterey | Apple M1 Max   | Clang 13 | 158ms |
+| [Flow X16 baseline](https://github.com/firestar99/task-opt1/commit/bc3df10185e0641c8aa7b9f757c6511ff195b187) | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 184ms |
+| [explicit indexing](https://github.com/firestar99/task-opt1/commit/dd3dab22034bec0e98700b6c850c28dc6540165b) | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 182ms |
+| [scatter writes](https://github.com/firestar99/task-opt1/commit/c4b3801dedca23c434fabeac67627f0bd8ac148c)    | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 162ms |
+| [rearrange loops](https://github.com/firestar99/task-opt1/commit/e0da2b0c5a21c5c2991fa31e901ba3d691f0f671)   | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 97ms  |
+| [cache errors](https://github.com/firestar99/task-opt1/commit/f84a3fd584fa53e105ad8738d77f3f1865e2141e)      | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 37ms  |
+| [cache squaring](https://github.com/firestar99/task-opt1/commit/81e4723acc9d196d182a917dd0efa825559d2bed)    | Ubuntu 24.10   | Ryzen 9 6900HS | Clang 19 | 33ms  |
 
 These numbers should give you an idea of what to expect on different architectures (and also compilers and OSes).
 
