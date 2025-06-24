@@ -92,7 +92,8 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 						int errors[4];
 						for (int s = 0; s < 4; ++s)
 						{
-							errors[s] = block_colors[s].g - colors[g_etc1_to_dxt1_selector_mappings[m][s]];
+							uint32_t err = block_colors[s].g - colors[g_etc1_to_dxt1_selector_mappings[m][s]];
+							errors[s] = err * err;
 						}
 
 						for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
@@ -101,8 +102,7 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 
 							uint32_t total_err = 0;
 							for (uint32_t s = low_selector; s <= high_selector; s++) {
-								int err = errors[s];
-								total_err += err * err;
+								total_err += errors[s];
 							}
 
 							size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
