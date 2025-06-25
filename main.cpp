@@ -109,10 +109,10 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 							if (total_err < result[index].m_err) {
 								result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)lo, (uint8_t)hi, (uint16_t)total_err };
 							}
-						}
-					}
-				} // sr
-			} // m
+						} // sr
+					} // m
+				} // lo
+			} // hi
 		} // g
 	} // inten
 }
