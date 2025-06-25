@@ -59,6 +59,14 @@ static bool verifyTable(const etc1_to_dxt1_56_solution* a, const etc1_to_dxt1_56
  */
 static etc1_to_dxt1_56_solution result[32 * 8 * NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * NUM_ETC1_TO_DXT1_SELECTOR_RANGES];
 
+static void write(uint32_t inten, uint32_t g, uint32_t sr, uint32_t m, uint32_t lo, uint32_t hi, uint32_t total_err)
+{
+	size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
+	if (total_err < result[index].m_err) {
+		result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)lo, (uint8_t)hi, (uint16_t)total_err };
+	}
+}
+
 /**
  * Function to optimise.
  */
@@ -105,10 +113,7 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 								total_err += errors[s];
 							}
 
-							size_t index = m + NUM_ETC1_TO_DXT1_SELECTOR_MAPPINGS * (sr + NUM_ETC1_TO_DXT1_SELECTOR_RANGES * (g + inten * 32));
-							if (total_err < result[index].m_err) {
-								result[index] = (etc1_to_dxt1_56_solution){ (uint8_t)lo, (uint8_t)hi, (uint16_t)total_err };
-							}
+							write(inten, g, sr, m, lo, hi, total_err);
 						} // sr
 					} // m
 				} // lo
