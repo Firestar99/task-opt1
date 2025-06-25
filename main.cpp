@@ -104,17 +104,23 @@ static void create_etc1_to_dxt1_6_conversion_table() {
 							errors[s] = err * err;
 						}
 
-						for (uint32_t sr = 0; sr < NUM_ETC1_TO_DXT1_SELECTOR_RANGES; sr++) {
-							const uint32_t low_selector = g_etc1_to_dxt1_selector_ranges[sr].m_low;
-							const uint32_t high_selector = g_etc1_to_dxt1_selector_ranges[sr].m_high;
+						int errors_0123 = errors[0] + errors[1] + errors[2] + errors[3];
+						write(inten, g, 0, m, lo, hi, errors_0123);
 
-							uint32_t total_err = 0;
-							for (uint32_t s = low_selector; s <= high_selector; s++) {
-								total_err += errors[s];
-							}
+						int errors_123 = errors[1] + errors[2] + errors[3];
+						write(inten, g, 1, m, lo, hi, errors_123);
 
-							write(inten, g, sr, m, lo, hi, total_err);
-						} // sr
+						int errors_012 = errors[0] + errors[1] + errors[2];
+						write(inten, g, 2, m, lo, hi, errors_012);
+
+						int errors_12 = errors[1] + errors[2];
+						write(inten, g, 3, m, lo, hi, errors_12);
+
+						int errors_23 = errors[2] + errors[3];
+						write(inten, g, 4, m, lo, hi, errors_23);
+
+						int errors_01 = errors[0] + errors[1];
+						write(inten, g, 5, m, lo, hi, errors_01);
 					} // m
 				} // lo
 			} // hi
